@@ -1,0 +1,54 @@
+C:\Users\София\Documents\Visual Studio 2012\Projects\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор_генетики_вер2.Form1.resources
+C:\Users\София\Documents\Visual Studio 2012\Projects\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор_генетики_вер2.InfoForm.resources
+C:\Users\София\Documents\Visual Studio 2012\Projects\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор_генетики_вер2.Properties.Resources.resources
+C:\Users\София\Documents\Visual Studio 2012\Projects\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер3.csproj.GenerateResource.Cache
+C:\Users\София\Documents\Visual Studio 2012\Projects\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер2.exe
+C:\Users\София\Documents\Visual Studio 2012\Projects\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Симулятор генетики вер2.exe.config
+C:\Users\София\Documents\Visual Studio 2012\Projects\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Симулятор генетики вер2.exe
+C:\Users\София\Documents\Visual Studio 2012\Projects\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Симулятор генетики вер2.pdb
+C:\Users\София\Documents\Visual Studio 2012\Projects\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Newtonsoft.Json.dll
+C:\Users\София\Documents\Visual Studio 2012\Projects\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Newtonsoft.Json.xml
+C:\Users\София\Documents\Visual Studio 2012\Projects\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер2.pdb
+C:\Users\София\Documents\Visual Studio 2012\Projects\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер3.csprojResolveAssemblyReference.cache
+E:\эвакуированные данные\Projects\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Симулятор генетики вер2.exe.config
+E:\эвакуированные данные\Projects\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Симулятор генетики вер2.exe
+E:\эвакуированные данные\Projects\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Симулятор генетики вер2.pdb
+E:\эвакуированные данные\Projects\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Newtonsoft.Json.dll
+E:\эвакуированные данные\Projects\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Newtonsoft.Json.xml
+E:\эвакуированные данные\Projects\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор_генетики_вер2.Form1.resources
+E:\эвакуированные данные\Projects\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор_генетики_вер2.InfoForm.resources
+E:\эвакуированные данные\Projects\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор_генетики_вер2.Properties.Resources.resources
+E:\эвакуированные данные\Projects\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер3.csproj.GenerateResource.cache
+E:\эвакуированные данные\Projects\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер3.csproj.CoreCompileInputs.cache
+E:\эвакуированные данные\Projects\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер3.csproj.CopyComplete
+E:\эвакуированные данные\Projects\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер2.exe
+E:\эвакуированные данные\Projects\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер2.pdb
+E:\эвакуированные данные\Projects\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер3.csprojAssemblyReference.cache
+E:\эвакуированные данные\Projects C#\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Симулятор генетики вер2.exe.config
+E:\эвакуированные данные\Projects C#\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Симулятор генетики вер2.exe
+E:\эвакуированные данные\Projects C#\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Симулятор генетики вер2.pdb
+E:\эвакуированные данные\Projects C#\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Newtonsoft.Json.dll
+E:\эвакуированные данные\Projects C#\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Newtonsoft.Json.xml
+E:\эвакуированные данные\Projects C#\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер3.csprojAssemblyReference.cache
+E:\эвакуированные данные\Projects C#\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор_генетики_вер2.Form1.resources
+E:\эвакуированные данные\Projects C#\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор_генетики_вер2.InfoForm.resources
+E:\эвакуированные данные\Projects C#\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор_генетики_вер2.Properties.Resources.resources
+E:\эвакуированные данные\Projects C#\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер3.csproj.GenerateResource.cache
+E:\эвакуированные данные\Projects C#\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер3.csproj.CoreCompileInputs.cache
+E:\эвакуированные данные\Projects C#\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер3.csproj.CopyComplete
+E:\эвакуированные данные\Projects C#\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер2.exe
+E:\эвакуированные данные\Projects C#\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер2.pdb
+E:\evacuated_data\Projects_Cs\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Симулятор генетики вер2.exe.config
+E:\evacuated_data\Projects_Cs\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Симулятор генетики вер2.exe
+E:\evacuated_data\Projects_Cs\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Симулятор генетики вер2.pdb
+E:\evacuated_data\Projects_Cs\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Newtonsoft.Json.dll
+E:\evacuated_data\Projects_Cs\Симулятор генетики вер3\Смулятор генетики вер2\bin\Debug\Newtonsoft.Json.xml
+E:\evacuated_data\Projects_Cs\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер3.csprojAssemblyReference.cache
+E:\evacuated_data\Projects_Cs\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор_генетики_вер2.Form1.resources
+E:\evacuated_data\Projects_Cs\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор_генетики_вер2.InfoForm.resources
+E:\evacuated_data\Projects_Cs\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор_генетики_вер2.Properties.Resources.resources
+E:\evacuated_data\Projects_Cs\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер3.csproj.GenerateResource.cache
+E:\evacuated_data\Projects_Cs\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер3.csproj.CoreCompileInputs.cache
+E:\evacuated_data\Projects_Cs\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер3.csproj.CopyComplete
+E:\evacuated_data\Projects_Cs\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер2.exe
+E:\evacuated_data\Projects_Cs\Симулятор генетики вер3\Смулятор генетики вер2\obj\Debug\Симулятор генетики вер2.pdb
