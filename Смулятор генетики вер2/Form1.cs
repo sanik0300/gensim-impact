@@ -12,7 +12,7 @@ namespace Симулятор_генетики_вер2
     {
         static bool sel = false;
         static Rectangle videl = new Rectangle();
-        Graphics ge;       
+        Graphics ge;
         static Point begin = new Point();
         static Color ofSelected = Color.Magenta; //цвет выбранной кнопки
         static public Dictionary<int, InfoForm> wins = new Dictionary<int, InfoForm>();
@@ -33,11 +33,12 @@ namespace Симулятор_генетики_вер2
         //создать сцуко контрол с заданными параметрами
 
         // Элементы учётки для АА аа генов
-        public GroupBox mend = customControl<GroupBox>("Аутосомный", new Size(162, 204), new Point(13, 36), false); //групбокс д/р
-        public TextBox nameIdent = customControl<TextBox>(string.Empty, new Size(149, 20), new Point(6, 39)),
-                       domGenRes = customControl<TextBox>(string.Empty, new Size(149, 20), new Point(6, 91)), //input доминантный признак 
-                        recGenRes = customControl<TextBox>(string.Empty, new Size(149, 20), new Point(6, 176)); //input рецессивный признак 
-        Label whatName = customControl<Label>("название", new Size(100, 12), new Point(6, 23)),
+        public GroupBox mend = new GroupBox() { Name = "Аутосомный", Size = new Size(162, 204), Location = new Point(13, 36), Enabled = false }; //групбокс д/р
+
+        public TextBox nameIdent = new TextBox() { Text = string.Empty, Size = new Size(149, 20), Location = new Point(6, 39) },
+                       domGenRes = new TextBox() { Text = string.Empty, Size = new Size(149, 20), Location = new Point(6, 91) }, //input доминантный признак 
+                        recGenRes = new TextBox() { Text = string.Empty, Size = new Size(149, 20), Location = new Point(6, 176) }; //input рецессивный признак 
+        Label whatName = new Label() { Text = "название", Size = new Size(100, 12), Location=new Point(6, 23)},
               mendDom = customControl<Label>("A", new Size(15, 12), new Point(6, 75)), //"доминантный алель"      
               mendRec = customControl<Label>("a", new Size(15, 12), new Point(6, 153)); //"рецессивный алель"     
         Button domColor = customControl<Button>("A", new Size(35, 20), new Point(20, 65)), //кнопка с доминантным цветом
@@ -75,12 +76,6 @@ namespace Симулятор_генетики_вер2
                       homo3 = customControl<Button>("BB", new Size(45, 23), new Point(63, 65), false),
                       het3 = customControl<Button>("B0", new Size(45, 23), new Point(112, 65), false),
                       fourth = customControl<Button>("AB", new Size(45, 23), new Point(112, 88), false);
-        //Смэрть
-        GroupBox howLively = customControl<GroupBox>("живучесть", new Size(161, 112), new Point(13, 107), false);
-        CheckBox ifTendsTo = customControl<CheckBox>("Является ли носителем", new Size(100, 17), new Point(6, 19), true, true);
-        TrackBar percents = customControl<TrackBar>(string.Empty, new Size(149, 45), new Point(6, 42));
-        Label indic = customControl<Label>("Вероятность:", new Size(150, 13), new Point(6, 87));
-
         //Переключатели активности
         GroupBox act = customControl<GroupBox>("Переключатель", new Size(162, 160), new Point(13, 155), false);
         ListBox futObjs = customControl<ListBox>("тут текст есть", new Size(144, 69), new Point(6, 24)), crtAims;
@@ -111,12 +106,12 @@ namespace Симулятор_генетики_вер2
                     foreach (Button b in ovr) { b.BackColor = Button.DefaultBackColor; }
                     but.BackColor = ofSelected;
 
-                    if (ind == -1) /*если -1 то это группа крови*/ { ses.willBeOnMe[listBox2.SelectedIndex].zig = new List<sbyte>(dict[but.Text] as sbyte[]); }
+                    if (ind == -1) /*если -1 то это группа крови*/ { selected_gen.zig = new List<sbyte>(dict[but.Text] as sbyte[]); }
                     
                     else {
-                        try { ses.willBeOnMe[listBox2.SelectedIndex].zig[ind] = Convert.ToSByte(dict[but.Text]); }
+                        try { selected_gen.zig[ind] = Convert.ToSByte(dict[but.Text]); }
                         catch (ArgumentOutOfRangeException)
-                        { ses.willBeOnMe[listBox2.SelectedIndex].zig.Add(Convert.ToSByte(dict[but.Text])); }
+                        { selected_gen.zig.Add(Convert.ToSByte(dict[but.Text])); }
                     }
                 };
             }
@@ -182,9 +177,9 @@ namespace Симулятор_генетики_вер2
             saveFileDialog1.Filter = "Чистая линия|*.cln|Файл сценария|*.json|Текстовый файл|*.txt";
 
             //Упорядочить радиокнопки выбора типа гена
-            kinds = new RadioButton[5] { radioButton1, radioButton2, radioButton3, radioButton6, radioButton7 };
+            kinds = new RadioButton[4] { radioButton1, radioButton2, radioButton3, radioButton7 };
 
-            this.Controls.AddRange(new Control[] { mend, gamPut, groups, howLively, act});
+            this.Controls.AddRange(new Control[4] { mend, gamPut, groups, act});
             ge = panel1.CreateGraphics();
         }
         void clearmend(bool leave = false){  //очистить поля ввода
@@ -198,6 +193,7 @@ namespace Симулятор_генетики_вер2
         }
         private void Form1_Load(object sender, EventArgs e)
         {
+            ge = panel1.CreateGraphics();
             hasHalf.CheckedChanged += (s, a) => ifPutHalfIGene(halfGenRes, hasHalf);
 
             mend.Controls.AddRange(new Control[] { whatName, nameIdent, mendDom, domGenRes, mendRec, recGenRes, hasHalf, halfGenRes, domColor, recColor, yesofgen, noofgen });
@@ -218,19 +214,6 @@ namespace Симулятор_генетики_вер2
             
             provideClick<sbyte>(begn, Cell.gams, 0);
             provideClick<sbyte>(end, Cell.gams, 1);
-
-            //для леталок
-            howLively.Controls.AddRange(new Control[] { ifTendsTo, percents, indic });
-            percents.Maximum = Lethal.probability - 1;
-            percents.ValueChanged += (s, a) => {
-                ses.willBeOnMe[listBox2.SelectedIndex].zig[0] = Convert.ToSByte(percents.Value);
-                indic.Text = "Вероятность: " + percents.Value.ToString() + "/" + Lethal.probability.ToString();
-            };
-            ifTendsTo.CheckedChanged += (s, a) => {
-                ifPutHalfIGene(percents, ifTendsTo);
-                if (ifTendsTo.Checked) { ses.willBeOnMe[listBox2.SelectedIndex].zig[0] = Convert.ToSByte(percents.Value); }
-                else { ses.willBeOnMe[listBox2.SelectedIndex].zig[0] = 0; }
-            };
 
             //для цветных
             provideColor(domColor, domGenRes);
@@ -317,7 +300,7 @@ namespace Симулятор_генетики_вер2
 
         //-----Взаимодействие с окном----------------
         private void Form1_KeyUp(object sender, KeyEventArgs e) { forbthnstosee = e; }
-        private void Form1_SizeChanged(object sender, EventArgs e) { ge = panel1.CreateGraphics(); }
+        private void Form1_SizeChanged(object sender, EventArgs e) {  }
         private async void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             forbthnstosee = e;
@@ -331,7 +314,7 @@ namespace Симулятор_генетики_вер2
                     }
 
                     if (Cell.AreReady(mates[0], mates[1])) {
-                        Cell c = new Cell(ses, Convert.ToBoolean(new Random().Next(0, 2)), panel1, new List<AGene>(), ses.allCells, ses.crtCell);
+                        Cell c = new Cell(ses, Convert.ToBoolean(new Random().Next(0, 2)), panel1, ses.allCells, ses.crtCell);
                         c.parents.Add(mates[0].position);
                         c.parents.Add(mates[1].position);
 
@@ -339,7 +322,7 @@ namespace Симулятор_генетики_вер2
                             c.dnk.Add(Cell.VotTeXrest(mates[0].dnk[i], mates[1].dnk[i], c.sx));
                             c.mutate();
                             c.activate();
-                            c.ToBeOrNot(c.dnk[i], panel1);
+                            //c.ToBeOrNot(c.dnk[i], panel1);
                         }
                         if (panel1.Width - c.mesto.X < 90) { panel1.Size = new Size(panel1.Width + 40, panel1.Height); }
                         if (panel1.Height - c.mesto.Y < 90) { panel1.Size = new Size(panel1.Width, panel1.Height + 40); }
@@ -377,55 +360,52 @@ namespace Симулятор_генетики_вер2
 
 
         //-------------------Выбор разных видов генов------------------        
-        List<Control> crtTypeTools = new List<Control>();
-        int radioindx = 0;
+        List<Control> crtTypeTools = new List<Control>(2);
+        int y, radioindx;
         void Place() /*сoбственно весь  метод расстановки */ 
-        {
+        {          
             foreach(Control c in crtTypeTools) { c.Visible = false; }
             crtTypeTools.Clear();
-   
-            if (radioButton1.Checked || radioButton2.Checked) {
-                mend.Visible = true;
-                crtTypeTools.Add(mend);        
-            }
-            else if (radioButton7.Checked) { act.Visible = true; crtTypeTools.Add(act); }
+            
+            if (radioButton1.Checked || radioButton2.Checked)
+                crtTypeTools.Add(mend);
+            else if(radioButton7.Checked)
+                crtTypeTools.Add(act);
 
             if (listBox2.SelectedIndex >= 0) {
-                if (ses.willBeOnMe[listBox2.SelectedIndex] is Blood) { crtTypeTools.Add(groups); }
-                else if (ses.willBeOnMe[listBox2.SelectedIndex] is Lethal) { crtTypeTools.Add(howLively); }
+                if (selected_gen is Blood) { crtTypeTools.Add(groups); }
                 else { crtTypeTools.Add(gamPut); }
-                
-                crtTypeTools[crtTypeTools.Count-1].Visible = true;
+            }
+            domIdent.Enabled = listBox2.SelectedIndex == -1;
+            recident.Enabled = listBox2.SelectedIndex == -1;
+
+            y = 51;
+            for (int i = 0; i < kinds.Length; i++) {            
+                kinds[i].Location = new Point(13, y);
+                y = y + radioButton1.Height + 6;
+                if(i == radioindx) { 
+                    foreach(Control control in crtTypeTools)
+                    {
+                        control.Location = new Point(13, y);
+                        control.Visible = true;
+                        y = y + control.Height + 6;                      
+                    }
+                }
             }
             
-            for (int i = 0; i < kinds.Length; i++) { 
-                if(i<=radioindx) { kinds[i].Location = new Point(13, radioButton1.Location.Y + 23 * i); }     
-                
-                try { 
-                    crtTypeTools[0].Location = new Point(13, kinds[radioindx].Bottom + 6);                   
-                    if (crtTypeTools.Count == 2) { crtTypeTools[1].Location = new Point(12, crtTypeTools[0].Bottom + 6); }  
-                }
-                catch { }               
-                
-                if(i>radioindx) {
-                    try { kinds[i].Location = new Point(13, crtTypeTools[crtTypeTools.Count-1].Bottom + 6 + 23 * (i-radioindx-1)); }
-                    catch { kinds[i].Location = new Point(13, radioButton1.Location.Y + 23 * i); }
-                }
-            }
         }
-        private void radioButton1_CheckedChanged(object sender, EventArgs e) { mend.Text = "Аутосомный";   radioindx = 0;  Place(); }
-        private void radioButton2_CheckedChanged(object sender, EventArgs e) { mend.Text = "Сцепленный с полом";    radioindx = 1;   Place(); }
-        private void radioButton6_CheckedChanged(object sender, EventArgs e) { radioindx = 2;   Place(); }
-        private void radioButton3_CheckedChanged(object sender, EventArgs e) { radioindx = 3;   Place(); }
-        private void radioButton7_CheckedChanged(object sender, EventArgs e) { radioindx = 4;   Place(); }
+        private void radioButton1_CheckedChanged(object sender, EventArgs e) { radioindx = 0; Place(); }
+        private void radioButton2_CheckedChanged(object sender, EventArgs e) { radioindx = 1; Place(); }
+        private void radioButton3_CheckedChanged(object sender, EventArgs e) { radioindx = 2; Place(); }
+        private void radioButton7_CheckedChanged(object sender, EventArgs e) { radioindx = 3; Place(); }
         //------------------ выбор разных видов генов---------------
   
         //-------------Добавление клеток или признаков
         private void button2_Click(object sender, EventArgs e) //добавить клетку
         {
-            try { if (ses.crtCell == ses.allCells.Last<Cell>().mesto) { ses.crtCell = new Point(ses.crtCell.X + 50, ses.crtCell.Y); } }
+            try { if (ses.crtCell == ses.allCells[ses.allCells.Count-1].mesto) { ses.crtCell = new Point(ses.crtCell.X + 50, ses.crtCell.Y); } }
             catch { }
-            Cell c = new Cell(ses, radioButton5.Checked, panel1, new List<AGene>(from g in ses.willBeOnMe orderby g.name select g), ses.allCells, ses.crtCell);
+            Cell c = new Cell(ses, panel1, ses.allCells, ses.crtCell);
             c.activate();
         }
         private void button1_Click(object sender, EventArgs e) //добавить признак
@@ -464,42 +444,38 @@ namespace Симулятор_генетики_вер2
 
                 if (!halfGenRes.Enabled) { futArr[1] = null; }
 
-                if (radioButton1.Checked) { ses.AddFromScratch(ses.templGens, new Mendel(initgen, futArr, nameIdent.Text, hasHalf.Checked), listBox1, futObjs); }
+                if (radioButton1.Checked) { 
+                    ses.AddFromScratch(Cell.na_vixod.dnk, new Mendel(initgen, futArr, nameIdent.Text, hasHalf.Checked), listBox1, futObjs); 
+                }
                 else if (radioButton2.Checked) {
-                    ses.AddFromScratch(ses.templGens, new Chrom(radioButton5.Checked, initgen, futArr, nameIdent.Text, hasHalf.Checked), listBox1, futObjs);
-                    editAllSxs(ses.templGens);
+                    ses.AddFromScratch(Cell.na_vixod.dnk, new Chrom(radioButton5.Checked, initgen, futArr, nameIdent.Text, hasHalf.Checked), listBox1, futObjs);
+                    //editAllSxs(ses.templGens);
                 }
             }
 
             else if (radioButton3.Checked) {
-                if (!listBox1.Items.Contains("группа крови")) { ses.AddFromScratch(ses.templGens, new Blood(new sbyte[] { 0, 0 }), listBox1, futObjs); }
+                if (!listBox1.Items.Contains("группа крови")) { ses.AddFromScratch(Cell.na_vixod.dnk, new Blood(new sbyte[] { 0, 0 }), listBox1, futObjs); }
                 else { MessageBox.Show("Группа крови уже добавлена", "Сов падение", MessageBoxButtons.OK, MessageBoxIcon.Exclamation); }
             }
 
-            else if (radioButton6.Checked) {
-                if (!listBox1.Items.Contains("летальный ген")) { ses.AddFromScratch(ses.templGens, new Lethal(0, 0), listBox1, futObjs); }
-                else { MessageBox.Show("Летальный ген уже добавлен", "Сов падение", MessageBoxButtons.OK, MessageBoxIcon.Exclamation); }
-            }
-
             else if (radioButton7.Checked) {                
-                List<string> links = new List<string>();
+                List<int> links = new List<int>();
                 switch (futObjs.SelectedIndices.Count)
                 {
                     case 0:
                         MessageBox.Show("сначала что-то выберите, а", "ошиб 0чка вышла", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         break;
                     default:
-                        foreach (int i in futObjs.SelectedIndices) { links.Add(ses.templGens[i].name); }
+                        foreach (int i in futObjs.SelectedIndices) { links.Add(i); }
            
-                        ses.AddFromScratch(ses.templGens, new Active(new List<sbyte>() { 2, 2 }, links, ses.templGens, recAct.BackColor != DefaultBackColor), listBox1);
+                        ses.AddFromScratch(Cell.na_vixod.dnk, new Active(new List<sbyte>() { 2, 2 }, links, Cell.na_vixod.dnk, recAct.BackColor != DefaultBackColor), listBox1);
                         
-                        foreach (string a in ses.takenAims) { futObjs.Items.Remove(a); } //удалить его цели из потенциальных
+                        foreach (int a in ses.takenAims) { futObjs.Items.Remove(Cell.na_vixod.dnk[a].name); } //удалить его цели из потенциальных
                         break;
                 }    
             }
 
-            radioButton3.Enabled = !listBox1.Items.Contains("группа крови");
-            radioButton6.Enabled = !listBox1.Items.Contains("летальный ген");
+            radioButton3.Enabled = !listBox1.Items.Contains("группа крови");         
             radioButton7.Enabled = futObjs.Items.Count > 0;
 
             clearmend();
@@ -507,29 +483,27 @@ namespace Симулятор_генетики_вер2
         }
 
         void newTreat(int indx) {//это к методу ниже, прост вызывать придется несколько раз       
-            ses.xrom += Convert.ToInt32(ses.templGens[indx] is Chrom);
+            ses.xrom += Convert.ToInt32(Cell.na_vixod.dnk[indx] is Chrom);
             groupBox1.Visible = ses.xrom != 0;
 
-            ses.AddFromScratch(ses.willBeOnMe, (AGene)ses.templGens[indx].Clone(), listBox2);
-
-            foreach (Active g in ses.willBeOnMe.Where(x => x is Active)) { //если это активатор        
-                listBox2.Items[listBox2.Items.IndexOf(g.name)] = g.represent(ses.willBeOnMe);
-                g.name = g.represent(ses.willBeOnMe);
-            }
+            ses.willBeOnMe.Add(indx);
+            listBox2.Items.Add(Cell.na_vixod.dnk[indx].name);
 
             foreach (Button b in new Button[] { button2, button5, button6, button14 }) { b.Enabled = true; }
             button3.Enabled = false;
-            button7.Enabled = ses.willBeOnMe.Count != ses.templGens.Count;
+            button7.Enabled = ses.willBeOnMe.Count != Cell.na_vixod.dnk.Count;
         }
         private void button3_Click(object sender, EventArgs e) //Скинуть признак будущей клетке
         {
-            try { newTreat(listBox1.SelectedIndex); }
+            try { 
+                newTreat(listBox1.SelectedIndex);              
+            }
             catch (ArgumentOutOfRangeException)
             {
                 if (listBox1.Items.Count == 1) { newTreat(0); }
                 else { MessageBox.Show("Сначала выберите что переносить", "Ничего не выбрано", MessageBoxButtons.OK, MessageBoxIcon.Asterisk); }
             }
-            editAllSxs(ses.willBeOnMe);
+            //editAllSxs(ses.willBeOnMe);
         }
         //-------------добавление клеток или признаков
 
@@ -540,55 +514,54 @@ namespace Симулятор_генетики_вер2
                 MessageBox.Show("Сначала выберите что удалять", "Ничего не выбрано", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return;
             }
-            if (ses.templGens[listBox1.SelectedIndex] is Blood) { radioButton3.Enabled = true; }
-            else if (ses.templGens[listBox1.SelectedIndex] is Lethal) { radioButton6.Enabled = true; }
+            if (Cell.na_vixod.dnk[listBox1.SelectedIndex] is Blood) { radioButton3.Enabled = true; }
 
-            if (ses.templGens[listBox1.SelectedIndex] is Active) {
-                foreach (string a in (ses.templGens[listBox1.SelectedIndex] as Active).aims) {
+            if (Cell.na_vixod.dnk[listBox1.SelectedIndex] is Active) {
+                foreach (int a in (Cell.na_vixod.dnk[listBox1.SelectedIndex] as Active).aims) {
                     ses.takenAims.Remove(a); //удалить его цели из общих занятых
                     futObjs.Items.Add(a); //вернуть их в возможные
                 }
             }
             else { 
-                futObjs.Items.Remove(ses.templGens[listBox1.SelectedIndex].name);
+                futObjs.Items.Remove(Cell.na_vixod.dnk[listBox1.SelectedIndex].name);
                 
                 listBox2.SelectedIndex = listBox2.Items.IndexOf(listBox1.SelectedItem);       
-                button5.PerformClick(); //Влечёт за собой удаление копии гена также из списка на выход
-
-                ses.DeleteFromHist(ses.templGens, listBox1, listBox1.SelectedIndex); //потом сам ген 
-
-                List<AGene> ien = ses.templGens.Where(x => x is Active).ToList(); //потом отсортировать только активаторы
-                for (int i = 0; i < ien.Count(); i++) {
+                if(listBox2.SelectedIndex!=-1)
+                    button5.PerformClick(); //Влечёт за собой удаление копии гена также из списка на выход
+                
+                List<AGene> ien = Cell.na_vixod.dnk.Where(x => x is Active).ToList(); //потом отсортировать только активаторы
+                for (int i = 0; i < ien.Count(); i++)
+                {
                     Active a = ien[i] as Active;
+                    a.aims.Remove(listBox1.SelectedIndex);
                     if (a.aims.Count == 0) //если ничего не остаётся    
-                    {        
-                        ses.DeleteFromHist(ses.templGens, listBox1, listBox1.Items.IndexOf(a.name));                 
-                        MessageBox.Show($"Переключатель №{ses.templGens.IndexOf(a)} удалён за ненадобностью");    
+                    {
+                        ses.DeleteFromHist(Cell.na_vixod.dnk, listBox1, listBox1.Items.IndexOf(a.name));
+                        MessageBox.Show($"Переключатель №{Cell.na_vixod.dnk.IndexOf(a)} удалён за ненадобностью");
                     }
                 }
+                ses.DeleteFromHist(Cell.na_vixod.dnk, listBox1, listBox1.SelectedIndex); //потом сам ген              
             }
 
-            foreach (Button button in new Button[] { button3, button4, button5, button6, button7 }) { button.Enabled = ses.templGens.Count != 0; }
+            foreach (Button button in new Button[] { button3, button4, button5, button6, button7 }) { button.Enabled = Cell.na_vixod.dnk.Count != 0; }
             radioButton7.Enabled = (futObjs.Items.Count > 0);
         }
         private void button5_Click(object sender, EventArgs e) //удалить признак у будущей клетки
         {
-            try { if (ses.willBeOnMe[listBox2.SelectedIndex] is Chrom) { ses.xrom--; } }
+            try { if (selected_gen is Chrom) { ses.xrom--; } }
             catch { }
             groupBox1.Visible = ses.xrom != 0;
 
             ses.DeleteFromHist(ses.willBeOnMe, listBox2, listBox2.SelectedIndex);
 
-            List<AGene> closestacts = ses.willBeOnMe.Where(x => x is Active).ToList();
-            IEnumerable<string> names = from gen in ses.willBeOnMe select gen.name;
+            List<AGene> all_actives = Cell.na_vixod.dnk.Where(x => x is Active).ToList();
             
-            for (int i = 0; i < closestacts.Count; i++) {
-                if ((closestacts[i] as Active).aims.Intersect(names).Count() == 0)
+            for (int i = 0; i < all_actives.Count; i++) {
+                if ((all_actives[i] as Active).aims.Intersect(ses.willBeOnMe).Count() == 0)
                 {
-                    ses.DeleteFromHist(ses.willBeOnMe, listBox2, listBox2.Items.IndexOf(closestacts[i].name));
-                    MessageBox.Show($"{closestacts[i].name} убран, так как убраны все его цели \n Но не удалён :]");
+                    ses.DeleteFromHist(ses.willBeOnMe, listBox2, listBox2.Items.IndexOf(all_actives[i].name));
+                    MessageBox.Show($"{all_actives[i].name} убран, так как убраны все его цели \n Но не удалён :]");
                 }
-                else { (closestacts[i] as Active).RemoveAim_Rename(ses.willBeOnMe, listBox2); }
             }
          
             button7.Enabled = true;
@@ -612,15 +585,14 @@ namespace Симулятор_генетики_вер2
         private void button7_Click(object sender, EventArgs e) //скопировать клетке все возможные гены
         {
             ses.ClearReg(ses.willBeOnMe, listBox2);
-            ses.willBeOnMe.AddRange(ses.templGens);
+            for (int i = 0; i < Cell.na_vixod.dnk.Count; i++)
+                ses.willBeOnMe.Add(i);
             listBox2.Items.AddRange(listBox1.Items);
 
             foreach (Button b in new Button[] { button2, button5, button6 }) { b.Enabled = true; }
             foreach (Button b in new Button[] { button3, button7 }) { b.Enabled = false; }
 
-            editAllSxs(ses.willBeOnMe);
-
-            foreach (AGene ig in ses.templGens) { ses.xrom += Convert.ToInt32(ig is Chrom); }
+            foreach (AGene ig in Cell.na_vixod.dnk) { ses.xrom += Convert.ToInt32(ig is Chrom); }
             groupBox1.Visible = ses.xrom != 0;
         }
 
@@ -638,7 +610,8 @@ namespace Симулятор_генетики_вер2
             listBox2.SelectedIndex = -1;
             Place();
         }
-       
+
+        private AGene selected_gen;
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)//Просмотр генов будущей клетки без возможности изменения
         {
             foreach (RadioButton rb in kinds) { rb.Enabled = listBox2.SelectedIndex == -1; }
@@ -647,52 +620,52 @@ namespace Симулятор_генетики_вер2
             crtAims.Visible = listBox2.SelectedIndex >= 0;
             futObjs.Visible = listBox2.SelectedIndex == -1;
             act.Text = listBox2.SelectedIndex >= 0 ? "Задействованые гены" : "Выберите ген(ы)";
-
             hasHalf.Enabled = listBox2.SelectedIndex == -1;
+
+            selected_gen = (listBox2.SelectedIndex!=-1)? Cell.na_vixod.dnk[ses.willBeOnMe[listBox2.SelectedIndex]] : null;
             if (listBox2.SelectedIndex != -1)
             {
                 foreach (Button gb in gamPut.Controls.OfType<Button>()) { gb.BackColor = Button.DefaultBackColor; }
 
-                if (ses.willBeOnMe[listBox2.SelectedIndex] is Mendel || ses.willBeOnMe[listBox2.SelectedIndex] is Chrom || ses.willBeOnMe[listBox2.SelectedIndex] is Active)
+                if (selected_gen is Mendel || selected_gen is Chrom || selected_gen is Active)
                 {
-                    nameIdent.Text = ses.willBeOnMe[listBox2.SelectedIndex].name;
-                    for (int i = 0; i <= 2; i++) { switchables[i].Text = ses.willBeOnMe[listBox2.SelectedIndex].ress[i]; }
+                    nameIdent.Text = selected_gen.name;
+                    for (int i = 0; i <= 2; i++) { switchables[i].Text = selected_gen.ress[i]; }
 
-                    hasHalf.Checked = ses.willBeOnMe[listBox2.SelectedIndex].ress[1] != null;
+                    hasHalf.Checked = selected_gen.ress[1] != null;
                     foreach(Button b in doms) {
-                        b.Text = ses.willBeOnMe[listBox2.SelectedIndex].ress[1] != null? "Ā" : "A";
+                        b.Text = selected_gen.ress[1] != null? "Ā" : "A";
                     }
                     foreach (Button b in end) { b.Enabled = true; }
-                    foreach (Label lab in new Label[] { x1st, xOrY }) { lab.Visible = ses.willBeOnMe[listBox2.SelectedIndex] is Chrom; }
+                    foreach (Label lab in new Label[] { x1st, xOrY }) { lab.Visible = selected_gen is Chrom; }
 
                     
                     try {
-                        domGenRes.BackColor = ColorTranslator.FromHtml(ses.willBeOnMe[listBox2.SelectedIndex].ress[2]);
-                        recGenRes.BackColor = ColorTranslator.FromHtml(ses.willBeOnMe[listBox2.SelectedIndex].ress[0]);
+                        domGenRes.BackColor = ColorTranslator.FromHtml(selected_gen.ress[2]);
+                        recGenRes.BackColor = ColorTranslator.FromHtml(selected_gen.ress[0]);
                         foreach (TextBox tb in switchables) { tb.Text = null; }
                     }
                     catch { }
 
-                    if (ses.willBeOnMe[listBox2.SelectedIndex] is Mendel) { radioButton1.Checked = true; }
-                    else if (ses.willBeOnMe[listBox2.SelectedIndex] is Chrom) {
+                    if (selected_gen is Mendel) { radioButton1.Checked = true; }
+                    else if (selected_gen is Chrom) {
                         radioButton2.Checked = true;
                         foreach (Button b in end) { b.Enabled = radioButton5.Checked; }
                     }
-                    else if (ses.willBeOnMe[listBox2.SelectedIndex] is Active) {
+                    else if (selected_gen is Active) {
                         radioButton7.Checked = true;
                         crtAims.Items.Clear();
-                        foreach(string i in (ses.willBeOnMe[listBox2.SelectedIndex] as Active).aims) 
+                        foreach(int i in (selected_gen as Active).aims) 
                         {                          
-                            if(listBox2.Items.Contains(i) || listBox2.Items.Contains(i + " XY")) { crtAims.Items.Add(i); }                          
+                            crtAims.Items.Add(Cell.na_vixod.dnk[i].name);                        
                         }
                     }
 
-                        begn[Convert.ToInt32(ses.willBeOnMe[listBox2.SelectedIndex].zig[0] > 0)].BackColor = ofSelected;
-                    try { end[Convert.ToInt32(ses.willBeOnMe[listBox2.SelectedIndex].zig[1] > 0)].BackColor = ofSelected; }
+                        begn[Convert.ToInt32(selected_gen.zig[0] > 0)].BackColor = ofSelected;
+                    try { end[Convert.ToInt32(selected_gen.zig[1] > 0)].BackColor = ofSelected; }
                     catch (ArgumentOutOfRangeException) { }
                 }
-                radioButton3.Checked = ses.willBeOnMe[listBox2.SelectedIndex] is Blood;
-                radioButton6.Checked = ses.willBeOnMe[listBox2.SelectedIndex] is Lethal;
+                radioButton3.Checked = selected_gen is Blood;              
             }
             Place();
 
@@ -700,32 +673,34 @@ namespace Симулятор_генетики_вер2
         }
 
         //----------------------------- Изменение пола --------------------
-        private void radioButton4_CheckedChanged(object sender, EventArgs e) { //включить/выключить половину гамет в связи с полом клетки
-            foreach (Button b in end) {
-                if (ses.willBeOnMe[listBox2.SelectedIndex] is Chrom) { 
-                     b.Enabled = radioButton5.Checked; b.BackColor = DefaultBackColor; 
-                }                      
+        private void radioButton4_CheckedChanged(object sender, EventArgs e)
+        { //включить/выключить половину гамет в связи с полом клетки
+            Cell.na_vixod.sx = !radioButton4.Checked;
+
+            foreach (Button b in end)
+            {
+                if (selected_gen is Chrom)
+                    b.Enabled = radioButton5.Checked; b.BackColor = DefaultBackColor;           
             }
-            editAllSxs(ses.willBeOnMe);
-            editAllSxs(ses.templGens);
-        }
-        private void radioButton5_CheckedChanged(object sender, EventArgs e) { if (radioButton5.Checked) { big2nd.BackColor = ofSelected; } }
-        void editAllSxs(List<AGene> list)  
-        { //поменять пол всем хромосомным генам 
-            foreach (AGene g in list.Where(x => x is Chrom)) {
-                if (radioButton4.Checked) {
-                    try { (g as Chrom).zig.RemoveAt(1); }
-                    catch (ArgumentOutOfRangeException) { }
-                }
-                else {
-                    if ((g as Chrom).zig.Count == 1) { (g as Chrom).zig.Add(2); }
-                }
+            foreach (AGene g in Cell.na_vixod.dnk.Where(x => x is Chrom))
+            {
+                if (!Cell.na_vixod.sx.Value)
+                    (g as Chrom).zig.RemoveAt(1);            
+                else 
+                    (g as Chrom).zig.Add(2);               
             }
             xOrY.Text = radioButton4.Checked ? "Y" : "X2";
-        }  
-        
-        //-----------------------------изменение пола --------------------
-        private void button14_Click(object sender, EventArgs e) { Cell.MakeGenom(ses.willBeOnMe, -1); }
+        }
+        private void radioButton5_CheckedChanged(object sender, EventArgs e) { if (radioButton5.Checked) { big2nd.BackColor = ofSelected; } }
+
+        private void button14_Click(object sender, EventArgs e) {
+
+            List<AGene> tobedisplayed = new List<AGene>();
+            for (int i = 0; i < Cell.na_vixod.dnk.Count; i++)
+                if (ses.willBeOnMe.Contains(i))
+                    tobedisplayed.Add(Cell.na_vixod.dnk[i]);
+            Cell.MakeGenom(tobedisplayed);        
+        }
        
         Pen ppap = new Pen(Color.White, 2);
         Pen dash = new Pen(Color.White, 2) { DashPattern = new float[2] { 4, 4 } };
@@ -752,8 +727,7 @@ namespace Симулятор_генетики_вер2
         {
             ses = await Task<Session>.Run(() => ses.deserialize(openFileDialog1));
 
-            ses.registerNew(ses.templGens, listBox1, futObjs);
-            ses.registerNew(ses.willBeOnMe, listBox2, futObjs);
+            ses.registerNew(Cell.na_vixod.dnk, listBox1, futObjs);
 
             foreach(Button b in new Button[] { button2, button4, button5, button6}) { b.Enabled = ses.willBeOnMe.Count > 0; }
             this.Text = openFileDialog1.FileName + " - Симулятор генетики";

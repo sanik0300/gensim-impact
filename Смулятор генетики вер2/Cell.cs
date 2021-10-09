@@ -16,7 +16,7 @@ namespace Симулятор_генетики_вер2
         public Point mesto { get; set; }
         public Color indic { get; set; }
 
-        public bool sx { get; set; }
+        public bool? sx { get; set; }
         public bool alive { get; set; }
         sbyte chr { get; set; }
 
@@ -32,18 +32,31 @@ namespace Симулятор_генетики_вер2
             {"00", new sbyte[] {0, 0}}, {"AA", new sbyte[] {1, 1}}, {"A0", new sbyte[] {1, 0}},
             {"BB", new sbyte[] {2, 2}}, {"B0", new sbyte[] {2, 0}}, {"AB", new sbyte[] {1, 2}}
         };
-                                
+
+        static public Cell na_vixod=new Cell() { alive = true };
+
         public Cell() { }
-        
-        public Cell(Session zaxod, bool sx, Panel p, List<AGene> myOwn, List<Cell> home, Point locate)
+        /// <summary>
+        /// Создать клетку из ничего c заданными параметрами
+        /// </summary>
+        /// <param name="zaxod">ссылка на заход в игру</param>
+        /// <param name="sx">пол клетки</param>
+        /// <param name="p">панель для отображения клетки</param>
+        /// <param name="myOwn">номера генов для передачи</param>
+        /// <param name="home">относительно какой группы идентифицируем клетку</param>
+        /// <param name="locate">место на панели для клетки</param>
+        public Cell(Session zaxod, Panel p, List<Cell> home, Point locate)
         {          
             this.mesto = new Point(locate.X, locate.Y);
-            this.sx = sx;
+            this.sx = Cell.na_vixod.sx;
             this.alive = true;
             this.chr += Convert.ToSByte(zaxod.xrom);
-            foreach (AGene g in myOwn) { this.dnk.Add((AGene)g.Clone()); } //уравнивать списки НИЗЯ
-            this.indic = zaxod.xrom == 0 ? Color.LightGray : (this.sx ? Color.LightPink : Color.LightBlue);
-            this.position = home.Count;           
+            for (int i = 0; i < na_vixod.dnk.Count; i++) {
+                if (Session.Current.willBeOnMe.Contains(i))
+                    this.dnk.Add(na_vixod.dnk[Convert.ToInt32(i)].Clone() as AGene);
+            }
+            this.indic = zaxod.xrom == 0 ? Color.LightGray : (this.sx.Value? Color.LightPink : Color.LightBlue);
+            this.position = home.Count;
 
             home.Add(this);
 
@@ -51,11 +64,35 @@ namespace Симулятор_генетики_вер2
             p.Controls.Add(b);
             b.Click += (s, a) => { MakeGenom(this.dnk, this.position); b.Focus(); };
         }
+        /// <summary>
+        /// Создаёт клетку с пустым геномом и неизвестным полом
+        /// </summary>
+        /// <param name="zaxod">ссылка на заход в игру</param>
+        /// <param name="sx">пол</param>
+        /// <param name="p">панель для отображения клетки</param>
+        /// <param name="home">относительно какой группы идентифицируем клетку</param>
+        /// <param name="locate">место на панели для клетки</param>
+        public Cell(Session zaxod, bool sx, Panel p, List<Cell> home, Point locate)
+        {
+            this.mesto = new Point(locate.X, locate.Y);
+            this.sx = sx;
+            this.alive = true;
+            this.chr += Convert.ToSByte(zaxod.xrom);
+            this.indic = zaxod.xrom == 0 ? Color.LightGray : (this.sx.Value ? Color.LightPink : Color.LightBlue);
+            this.position = home.Count;
+            this.dnk = new List<AGene>();
+
+            home.Add(this);
+
+            Button b = new Button() { Size = new Size(45, 45), Location = this.mesto, BackColor = this.indic, Text = home.Count.ToString() };
+            p.Controls.Add(b);
+            b.Click += (s, a) => { MakeGenom(this.dnk, this.position); b.Focus(); }; 
+        }
 
         static private DataGridViewCellStyle silent = new DataGridViewCellStyle() { BackColor = Color.LightGreen },
             missed = new DataGridViewCellStyle() { BackColor = Color.LightSalmon },
             inactive = new DataGridViewCellStyle() { BackColor = Color.LightGray, ForeColor = Color.Gray };
-        static public void MakeGenom(List<AGene> list, int indx) {
+        static public void MakeGenom(List<AGene> list, int indx=-1) {
             
             InfoForm table = new InfoForm();
             try
@@ -105,7 +142,7 @@ namespace Симулятор_генетики_вер2
             if (!Convert.ToBoolean(c.chr)) { p.Controls.OfType<Button>().ToArray<Button>()[c.position].BackColor = nb; }
             else
             {
-                p.Controls.OfType<Button>().ToArray<Button>()[c.position].BackColor = c.sx ? f : m;
+                p.Controls.OfType<Button>().ToArray<Button>()[c.position].BackColor = c.sx.Value ? f : m;
             }
             if (add && !list.Contains(c)) { list.Add(c); }
             else { list.Remove(c); }
@@ -121,7 +158,7 @@ namespace Симулятор_генетики_вер2
             return yes;
         }
     
-        static public AGene VotTeXrest(AGene mg, AGene fg, bool isF)
+        static public AGene VotTeXrest(AGene mg, AGene fg, bool? isF)
         {
             AGene c1 = (AGene)mg.Clone();
             AGene c2 = (AGene)fg.Clone();
@@ -136,23 +173,16 @@ namespace Симулятор_генетики_вер2
                     c1 = (AGene)fg.Clone();
                 }
             }
-            ofKid.zig = new List<sbyte>() { c1.zig[rand.Next(0, 2)], c2.zig[0]};
-            if (mg is Chrom)
-            {
-                if (isF)
-                {
-                    try { ofKid.zig[1] = c2.zig[rand.Next(0, 2)]; }
-                    catch { }
-                }
-                else { ofKid.zig.RemoveAt(1); }
-            }
-            else { ofKid.zig[1] = c2.zig[rand.Next(0, 2)]; }
-
+            ofKid.zig = new List<sbyte>() { c1.zig[rand.Next(0, 2)], c2.zig[rand.Next(0, 2)]};
+           
+            if (mg is Chrom && isF !=null && !isF.Value)
+                ofKid.zig.RemoveAt(1);         
+            
             if (mg is Mendel) { return (Mendel)ofKid; }
             else if (mg is Chrom) { return (Chrom)ofKid; }
             else if (mg is Blood) { return (Blood)ofKid; }
-            else if (mg is Lethal) { return (Lethal)ofKid; }
             else { return (Active)ofKid; }
+           
         }
 
         static sbyte sumZig(List<sbyte> arr) {
@@ -161,18 +191,17 @@ namespace Симулятор_генетики_вер2
         }
         static int startkey;
         public void mutate() {
-            foreach (AGene g in this.dnk) {
-                if(!(g is Lethal)) {
-                    int prevSum = sumZig(g.zig);
-                    for (int i = 0; i < g.zig.Count; i++)
-                    {              
-                        startkey = rand.Next(0, Session.Current.mutProb);
-                        if (startkey == 1)
-                        {
-                            g.zig[i] = Convert.ToSByte(rand.Next(0, 2));
-                            if (!g.codom) { g.zig[i] = Convert.ToSByte((int)g.zig[i] * 2); }   
-                            g.mut = prevSum == sumZig(g.zig) ? AGene.Mutations.Silence : AGene.Mutations.Missense;
-                        }
+            foreach (AGene g in this.dnk)
+            {
+                int prevSum = sumZig(g.zig);
+                for (int i = 0; i < g.zig.Count; i++)
+                {
+                    startkey = rand.Next(0, Session.Current.mutProb);
+                    if (startkey == 1)
+                    {
+                        g.zig[i] = Convert.ToSByte(rand.Next(0, 2));
+                        if (!g.codom) { g.zig[i] = Convert.ToSByte((int)g.zig[i] * 2); }
+                        g.mut = prevSum == sumZig(g.zig) ? AGene.Mutations.Silence : AGene.Mutations.Missense;
                     }
                 }
             }
@@ -182,27 +211,26 @@ namespace Симулятор_генетики_вер2
         {
             foreach (Active agen in this.dnk.Where<AGene>(a => a is Active))
             {
-                foreach (string a in agen.aims)
+                foreach (int aim in agen.aims)
                 {
-                    int indx = this.dnk.FindLastIndex(x => x.name == a);
+                    int indx = Session.Current.willBeOnMe.FindLastIndex(x => x == aim);
                     if (indx >= 0)
                     {
                         this.dnk[indx].active = (agen.zig[0] + agen.zig[1] > 0) != agen.inverted;
                     }
                 }
-                agen.name = agen.represent(this.dnk);
             }
         }
 
         /// <summary> Определить, живая ли будет клетка </summary>
-        public void ToBeOrNot(AGene g, Panel panel) {
+        /*public void ToBeOrNot(AGene g, Panel panel) {
             if (g is Lethal)
             {
                 this.alive = g.zig[0] + g.zig[1] < Lethal.probability;
                 if (!this.alive) { panel.Controls.OfType<Button>().ToArray<Button>()[this.position].BackColor = Color.Black; }
                 panel.Controls.OfType<Button>().ToArray<Button>()[Session.Current.allCells.IndexOf(this)].Enabled = this.alive;
             }
-        }
+        }*/
     }
 }
 

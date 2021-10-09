@@ -83,7 +83,6 @@
     <Compile Include="InfoTable.Designer.cs">
       <DependentUpon>InfoTable.cs</DependentUpon>
     </Compile>
-    <Compile Include="Lethal.cs" />
     <Compile Include="Mendel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

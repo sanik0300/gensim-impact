@@ -15,6 +15,7 @@ namespace Симулятор_генетики_вер2
         public List<sbyte> zig { get; set; }
         public string[] ress { get; set; }
         public Mutations mut { get; set; }
+        public bool[] lethalities { get; set; }
 
         public bool codom { get; set; }//Есть ли кодоминирование
         public bool active = true;

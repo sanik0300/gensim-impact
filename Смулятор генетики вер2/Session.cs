@@ -31,13 +31,15 @@ namespace Симулятор_генетики_вер2
 
         //Что нужно для сохраненной игры
         public Point crtCell = new Point(20, 20);
-        public List<AGene> templGens = new List<AGene>();//ЛБ 1, вообще все гены
         public int xrom = 0; //количество хромосомных генов клетки на подходе
         public int toDelCel = -1;
         public int mutProb = 10; //вероятность мутации (1 из) 
         public List<Cell> allCells = new List<Cell>();
-        public List<AGene> willBeOnMe = new List<AGene>(); //ЛБ 2, какие гены будут добавлены на эту клетку, менять можно    
-        public List<string> takenAims = new List<string>();
+        /// <summary>
+        /// Индексы генов какие будут в клетке
+        /// </summary>
+        public List<int> willBeOnMe = new List<int>();
+        public List<int> takenAims = new List<int>();
 
         public void AddFromScratch(List<AGene> kuda, AGene shto, ListBox repres, ListBox foracts=null)
         {
@@ -50,14 +52,14 @@ namespace Симулятор_генетики_вер2
             if (foracts != null && !(shto is Active)) { foracts.Items.Add(shto.name); }
         }
 
-        public void DeleteFromHist(List<AGene> list, ListBox repres, int indx, ListBox foracts=null)
+        public void DeleteFromHist<T>(List<T> list, ListBox repres, int indx, ListBox foracts=null)
         {
             if (foracts != null) { foracts.Items.Remove(repres.SelectedItem); }
             repres.Items.RemoveAt(indx);
-            list.RemoveAt(indx);         
+            list.RemoveAt(indx);
         }
 
-        public void ClearReg(List<AGene> list, ListBox repres)
+        public void ClearReg<T>(List<T> list, ListBox repres)
         {
             list.Clear();
             repres.Items.Clear();
