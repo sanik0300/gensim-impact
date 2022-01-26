@@ -1,0 +1,115 @@
+﻿<Window x:Class="Симулятор_генетики_4.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Симулятор_генетики_4"
+        mc:Ignorable="d"
+        Title="Симулятор генетики" Height="900" Width="1000" KeyDown="canvas_KeyDown" Closing="Window_Closing">
+    <Window.Resources>
+        <local:margin_convertor x:Key="goni_margin_suka"></local:margin_convertor>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="120" Width="250"></ColumnDefinition>
+            <ColumnDefinition x:Name="midcol"></ColumnDefinition>
+            <ColumnDefinition MinWidth="150" Width="200"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Column="1">
+            <Canvas Background="Lavender" MouseMove="canvas_MouseMove" MouseLeftButtonUp="canvas_MouseLeftButtonUp" MouseLeftButtonDown="Canvas_MouseLeftButtonDown" KeyDown="canvas_KeyDown" x:Name="canvas"></Canvas>   
+        </ScrollViewer>
+        
+        <StackPanel Margin="15" x:Name="types">
+            <DockPanel Height="25" Margin="10">
+                <Button IsEnabled="False" x:Name="save" Click="save_Click" Width="70">Cохранить</Button>
+                <Button x:Name="open" Click="open_Click"  Width="60">Открыть</Button>
+            </DockPanel>
+            <RadioButton x:Name="rb0" Checked="RadioButton_Checked" Tag="0">Обычный</RadioButton>
+            <StackPanel Tag="0"></StackPanel>
+            <RadioButton  x:Name="rb1" Checked="RadioButton_Checked" Tag="1">3 аллеля</RadioButton>
+            <StackPanel Tag="1"></StackPanel>
+            <RadioButton  x:Name="rb2" Checked="RadioButton_Checked" Tag="2">Активность</RadioButton>
+            <StackPanel Tag="2"></StackPanel>
+            <RadioButton x:Name="rb3" Checked="RadioButton_Checked" Tag="3">Количественный</RadioButton>
+            <StackPanel Tag="3"></StackPanel>
+        </StackPanel>
+        <GridSplitter Grid.Column="0" ShowsPreview="True" Width="3"></GridSplitter>
+        <GridSplitter Grid.Column="1" ShowsPreview="True" Width="3"></GridSplitter>
+        <DockPanel Grid.Column="2">
+            <Grid DockPanel.Dock="Top">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.8*"></RowDefinition>
+                    <RowDefinition Height="0.4*" MaxHeight="250"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                    <ColumnDefinition MaxWidth="70"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="AddTrait" Grid.Column="1" VerticalAlignment="Top" Click="AddTrait_Click" Height="40">+1 ген 🧬</Button>
+                <ListBox x:Name="allgens" SelectionChanged="allgens_SelectionChanged" Grid.ColumnSpan="2">
+                    <ListBox.Margin>
+                        <MultiBinding Converter="{StaticResource goni_margin_suka}">
+                            <Binding ElementName="AddTrait" Path="ActualHeight"></Binding>
+                        </MultiBinding>
+                    </ListBox.Margin>
+                </ListBox>
+                <DockPanel LastChildFill="False" Grid.Column="2" Margin="{Binding ElementName=allgens, Path=Margin}">
+                    
+                <Button x:Name="ebash_to_cell" Click="ebash_to_cell_Click" IsEnabled="False" DockPanel.Dock="Top" Height="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualWidth}">V</Button>
+                <Button x:Name="ebash_all" IsEnabled="False" DockPanel.Dock="Top" Margin="0 15 0 0" Height="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualWidth}" Click="ebash_all_Click">VV</Button>
+                <Button x:Name="naxer_gen" Click="naxer_gen_Click" IsEnabled="False" Background="OrangeRed" DockPanel.Dock="Bottom" Height="40">X</Button>
+                </DockPanel>
+
+                <GroupBox x:Name="ZigControl" Visibility="Hidden" Header="зиготность вида:" VerticalAlignment="Top" MaxHeight="110" Height="70" Grid.Row="1" Grid.ColumnSpan="2">
+                    <GroupBox.Margin>
+                        <MultiBinding Converter="{StaticResource goni_margin_suka}">
+                            <Binding ElementName="addlife" Path="ActualHeight"></Binding>
+                        </MultiBinding>
+                    </GroupBox.Margin>
+                    <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
+                        <RadioButton x:Name="xxxy" Checked="Change_Sx" IsChecked="True" FontSize="18">
+                            <TextBlock>
+                                <Span Foreground="HotPink">XX</Span>/<Span Foreground="CadetBlue">XY</Span>
+                            </TextBlock>
+                        </RadioButton>
+                        <RadioButton x:Name="zyzz" Checked="Change_Sx" FontSize="18">
+                            <TextBlock>
+                                <Span Foreground="HotPink">XY</Span>/<Span Foreground="CadetBlue">XX</Span>
+                            </TextBlock>
+                        </RadioButton>
+                    </StackPanel>
+                </GroupBox>
+
+                <Button x:Name="addlife" IsEnabled="False" Click="addlife_Click" Grid.Column="1" Grid.Row="2" Height="40" VerticalAlignment="Top">+1 особь 💓</Button>
+                <GroupBox x:Name="choosesx" Visibility="Hidden" Header="Пол особи?" VerticalAlignment="Top" MaxHeight="110" Height="50" Grid.Row="2" Grid.ColumnSpan="2">
+                    <GroupBox.Margin>
+                        <MultiBinding Converter="{StaticResource goni_margin_suka}">
+                            <Binding ElementName="addlife" Path="ActualHeight"></Binding>
+                        </MultiBinding>
+                    </GroupBox.Margin>
+                    <DockPanel  HorizontalAlignment="Stretch" LastChildFill="False">
+                        <RadioButton x:Name="isF" Checked="Change_Sx" FontSize="18" IsChecked="True">Ж</RadioButton>
+                        <RadioButton x:Name="isM" Checked="Change_Sx" FontSize="18" DockPanel.Dock="Right" >М</RadioButton>
+                    </DockPanel>
+                </GroupBox>
+                <DockPanel x:Name="lbandbutton"  Grid.Row="2" Grid.ColumnSpan="2">
+                    <DockPanel.Margin>
+                            <MultiBinding Converter="{StaticResource goni_margin_suka}">
+                                <Binding ElementName="addlife" Path="ActualHeight"></Binding>
+                                <Binding ElementName="choosesx" Path="ActualHeight"></Binding>
+                            </MultiBinding>
+                        </DockPanel.Margin>
+                    <Button DockPanel.Dock="Bottom" Height="25" MaxHeight="50" IsEnabled="False" VerticalAlignment="Bottom" x:Name="predv" Click="Button_Click">Предв. просмотр</Button>
+                    <ListBox SelectionChanged="resultgens_SelectionChanged" x:Name="resultgens"></ListBox>
+                </DockPanel>
+                <DockPanel Margin="{Binding ElementName=lbandbutton, Path=Margin}" Grid.Column="2" Grid.Row="2">
+                    <Button x:Name="clear" IsEnabled="False" DockPanel.Dock="Top" VerticalAlignment="Top" Height="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualWidth}" Click="clear_Click" >O</Button>
+                    <Button x:Name="navixod" Click="navixod_Click" IsEnabled="False" Background="LightSalmon" DockPanel.Dock="Bottom" Height="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualWidth}">x</Button>
+                </DockPanel>
+                
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Window>

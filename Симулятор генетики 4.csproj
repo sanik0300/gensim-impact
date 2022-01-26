@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>Симулятор_генетики_4</RootNamespace>
+    <UseWPF>true</UseWPF>
+    <Authors>sanik0300</Authors>
+    <Product>gensim4</Product>
+    <ApplicationIcon>dna-icon.ico</ApplicationIcon>
+    <AssemblyVersion>4.2.0.3</AssemblyVersion>
+    <FileVersion>4.2.0.3</FileVersion>
+    <Version>4.2.2</Version>
+    <PackageReleaseNotes>наконец-то)))</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="DNA-Strand.gif" />
+    <None Remove="ui\biology128.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="DNA-Strand.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="ui\biology128.ico" />
+  </ItemGroup>
+
+</Project>

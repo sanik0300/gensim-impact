@@ -1,0 +1,31 @@
+﻿<Window x:Class="Симулятор_генетики_4.SvodkaOfGens"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Симулятор_генетики_4"
+        mc:Ignorable="d"
+        Title="SvodkaOfGens" Height="250" Width="400" Closed="Window_Closed" IsManipulationEnabled="False" Icon="/ui/biology128.ico">
+    <Window.Resources>
+        <local:Mutations_converter x:Key="mut_to_color"></local:Mutations_converter>
+        <Style TargetType="DataGridCell" x:Key="mutatiomm">
+            <Setter Property="Background" Value="{Binding Converter={StaticResource mut_to_color}}"></Setter>
+        </Style>
+
+        <local:Activity_converter x:Key="act_to_color"></local:Activity_converter>
+        <local:Isalive_converter x:Key="dead_txts"></local:Isalive_converter>
+        <Style TargetType="DataGridCell" x:Key="isactive">
+            <Setter Property="Background" Value="{Binding Converter={StaticResource act_to_color}}"></Setter>
+            <Setter Property="Foreground" Value="{Binding Converter={StaticResource dead_txts}}"></Setter>
+        </Style>
+
+    </Window.Resources>
+    <DataGrid x:Name="datagrid_ok" CanUserAddRows="True">
+        <DataGrid.Columns>
+            <DataGridTextColumn IsReadOnly="True" Header="Признак" x:Name="c1" Width="110"></DataGridTextColumn>
+            <DataGridTextColumn IsReadOnly="True" CellStyle="{StaticResource mutatiomm}" Header="Аллели"></DataGridTextColumn>
+            <DataGridTextColumn IsReadOnly="True" CellStyle="{StaticResource isactive}" Header="Результат"></DataGridTextColumn>
+        </DataGrid.Columns>
+        
+    </DataGrid>
+</Window>

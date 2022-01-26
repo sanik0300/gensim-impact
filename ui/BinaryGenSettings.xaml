@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="Симулятор_генетики_4.BinaryGenSettings"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Симулятор_генетики_4"
+             mc:Ignorable="d" 
+             d:DesignHeight="280" d:DesignWidth="300">
+
+    <Grid DockPanel.Dock="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MaxWidth="80" Width="0.3*"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Column="1">Название</TextBlock>
+        <TextBox TextWrapping="Wrap" Grid.Column="1" Grid.Row="1" x:Name="nameinput"></TextBox>
+        <CheckBox Grid.Row="2" Grid.Column="1" x:Name="isChromeable">Cцепленый с полом</CheckBox>
+        <DockPanel LastChildFill="False" Grid.Column="1" Grid.Row="3">
+            <TextBlock>A</TextBlock>
+            <Button x:Name="yes" Click="yes_Click" DockPanel.Dock="Right" Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}">да</Button>
+        </DockPanel>
+        <TextBox TextWrapping="Wrap" Grid.Column="1" Grid.Row="4" x:Name="dom"></TextBox>
+        <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="1">
+            <CheckBox x:Name="iscodoming" Unchecked="iscodoming_Checked" Checked="iscodoming_Checked"></CheckBox>
+            <TextBlock> Кодоминирование</TextBlock>
+        </StackPanel>
+        <TextBox IsEnabled="False" TextWrapping="Wrap" Grid.Column="1" Grid.Row="6" x:Name="codom"></TextBox>
+        <DockPanel LastChildFill="False" Grid.Column="1" Grid.Row="7">
+            <TextBlock>a</TextBlock>
+            <Button x:Name="reverse_yes" Click="reverse_yes_Click" DockPanel.Dock="Right" Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}">да</Button>
+        </DockPanel>
+        <TextBox TextWrapping="Wrap" Grid.Column="1" Grid.Row="8" x:Name="rec"></TextBox>
+        <Button Margin="8" x:Name="DomKill" Grid.Row="3" Grid.RowSpan="2" Tag="2" HorizontalAlignment="Center" Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}" FontSize="20" Click="DomKill_Click">💀</Button>
+        <Button Margin="8" x:Name="RecKill" Grid.Row="7" Grid.RowSpan="2" Tag="0" HorizontalAlignment="Center" Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}" FontSize="20" Click="DomKill_Click">💀</Button>
+    </Grid>
+</UserControl>
