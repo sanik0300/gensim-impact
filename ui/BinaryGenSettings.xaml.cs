@@ -22,9 +22,12 @@ namespace Симулятор_генетики_4
         public BinaryGenSettings() { 
             InitializeComponent();
             deaths = new Button[2] { RecKill, DomKill };
+            alerts = new CheckBox[2] { danger_re, danger_d };
         }
         bool contains_lethal = false;
+        bool contains_alert = false;
         Button[] deaths;
+        CheckBox[] alerts;
         public BinaryGenSettings(Gene g)
         {
             InitializeComponent();     
@@ -43,6 +46,11 @@ namespace Симулятор_генетики_4
                 else
                     deaths[i].Foreground = Brushes.White;
             }
+            if (g.AlertAllels == null)
+                return;
+            alerts = new CheckBox[2] { danger_re, danger_d };
+            foreach (int a in g.AlertAllels)
+                alerts[Math.Clamp(a, 0, 1)].IsChecked = true;//а то мало ли больший аллель эт 2
         }
 
         public TextBox[] textboxes { 
@@ -55,17 +63,23 @@ namespace Симулятор_генетики_4
 
         private void iscodoming_Checked(object sender, RoutedEventArgs e) { codom.IsEnabled = iscodoming.IsChecked.Value; }
 
-        public Gene CreateNew()
+        public Gene CreateNew(int mutprob)
         {
-
             Binary bin = new Binary(nameinput.Text, 
-                new string[3] { rec.Text, iscodoming.IsChecked.Value ? codom.Text : null, dom.Text }, 
+                new string[3] { rec.Text, iscodoming.IsChecked.Value ? codom.Text : null, dom.Text }, mutprob,
                 isChromeable.IsChecked.Value, 
                 iscodoming.IsChecked.Value);
             if (contains_lethal)
-            {
-                bin.lethal = new LethalComponent(Convert.ToInt32(DomKill.Background==Brushes.Black)+Convert.ToInt32(!(bool)iscodoming.IsChecked && DomKill.Background == Brushes.Black), 100);
-            }
+                bin.lethal = new LethalComponent(Convert.ToInt32(DomKill.Background == Brushes.Black) * (Convert.ToInt32(!(bool)iscodoming.IsChecked) + 1), 100);
+            
+            if (contains_alert) {
+                for(int i = 0; i<2; i++) {
+                    if (alerts[i].IsChecked.Value) {
+                        bin.AlertAllels = new int[1] { i * (Convert.ToInt32(!(bool)iscodoming.IsChecked) + 1) };
+                        break;
+                    }
+                }
+            }            
             return bin;
         }
 
@@ -74,6 +88,8 @@ namespace Симулятор_генетики_4
             foreach(TextBox tb in this.textboxes) { tb.Text = null; }
             iscodoming.IsChecked = false;
             codom.IsEnabled = false;
+            contains_lethal = false;
+            contains_alert = false;
         }
 
         public void CheckFilling()
@@ -96,18 +112,13 @@ namespace Симулятор_генетики_4
 
         private void yes_Click(object sender, RoutedEventArgs e)
         {
-            dom.Text = "Да";
-            rec.Text = "Нет";
+            bool reverse = sender == reverse_yes;
+            dom.Text = reverse? "Нет" : "Да";
+            rec.Text = reverse? "Да" : "Нет";
             codom.Text = null;
             iscodoming.IsChecked = false;
         }
-        private void reverse_yes_Click(object sender, RoutedEventArgs e)
-        {
-            dom.Text = "Нет";
-            rec.Text = "Да";
-            codom.Text = null;
-            iscodoming.IsChecked = false;
-        }
+
 
         private void DomKill_Click(object sender, RoutedEventArgs e)
         {
@@ -119,10 +130,33 @@ namespace Симулятор_генетики_4
                     b.Foreground = Brushes.Black;
                 }
                 contains_lethal = !contains_lethal;  
-            }                    
-            
+            }
+            CheckBox corresponding = sender == DomKill ? danger_d : danger_re,
+                     other = sender == DomKill ? danger_re : danger_d;
+            corresponding.IsEnabled = !contains_lethal;
+            other.IsEnabled = true;
+
             (sender as Button).Background = contains_lethal ? Brushes.Black : default;
             (sender as Button).Foreground = contains_lethal ? Brushes.White : Brushes.Black;
+        }
+
+        private void danger_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckBox me = sender as CheckBox;
+            
+            TextBox namebox = sender == danger_d ? dom : rec;
+            contains_alert = me.IsChecked.Value && me.IsEnabled;
+            namebox.Foreground = contains_alert? Brushes.Firebrick : Brushes.Black;
+
+            if (!me.IsChecked.Value)
+                return;
+            CheckBox other = sender == danger_d ? danger_re : danger_d;
+            other.IsChecked = !me.IsChecked;
+        }
+
+        private void danger_d_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            danger_Checked(sender, new RoutedEventArgs());
         }
     }
 }

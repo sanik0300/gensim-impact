@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Симулятор_генетики_4"
         mc:Ignorable="d"
-        Title="Симулятор генетики" Height="900" Width="1000" KeyDown="canvas_KeyDown" Closing="Window_Closing">
+        Title="Симулятор генетики" Height="900" Width="1024" KeyDown="canvas_KeyDown" Closing="Window_Closing">
     <Window.Resources>
         <local:margin_convertor x:Key="goni_margin_suka"></local:margin_convertor>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="120" Width="250"></ColumnDefinition>
+            <ColumnDefinition MinWidth="120" Width="280"></ColumnDefinition>
             <ColumnDefinition x:Name="midcol"></ColumnDefinition>
             <ColumnDefinition MinWidth="150" Width="200"></ColumnDefinition>
         </Grid.ColumnDefinitions>

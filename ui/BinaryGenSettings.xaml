@@ -25,10 +25,12 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="1">Название</TextBlock>
         <TextBox TextWrapping="Wrap" Grid.Column="1" Grid.Row="1" x:Name="nameinput"></TextBox>
-        <CheckBox Grid.Row="2" Grid.Column="1" x:Name="isChromeable">Cцепленый с полом</CheckBox>
+        <CheckBox Grid.Row="2" Grid.Column="1" x:Name="isChromeable">X-cцепленное наследование</CheckBox>
         <DockPanel LastChildFill="False" Grid.Column="1" Grid.Row="3">
             <TextBlock>A</TextBlock>
-            <Button x:Name="yes" Click="yes_Click" DockPanel.Dock="Right" Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}">да</Button>
+            <Button x:Name="yes" Click="yes_Click" DockPanel.Dock="Right" Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}">+/-</Button>
+            <CheckBox x:Name="danger_d" DockPanel.Dock="Right" VerticalContentAlignment="Center" Checked="danger_Checked" Unchecked="danger_Checked" IsEnabledChanged="danger_d_IsEnabledChanged"
+                     Foreground="Firebrick">опасный</CheckBox>
         </DockPanel>
         <TextBox TextWrapping="Wrap" Grid.Column="1" Grid.Row="4" x:Name="dom"></TextBox>
         <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="1">
@@ -37,8 +39,10 @@
         </StackPanel>
         <TextBox IsEnabled="False" TextWrapping="Wrap" Grid.Column="1" Grid.Row="6" x:Name="codom"></TextBox>
         <DockPanel LastChildFill="False" Grid.Column="1" Grid.Row="7">
-            <TextBlock>a</TextBlock>
-            <Button x:Name="reverse_yes" Click="reverse_yes_Click" DockPanel.Dock="Right" Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}">да</Button>
+            <TextBlock HorizontalAlignment="Left">a</TextBlock>
+            <Button DockPanel.Dock="Right" x:Name="reverse_yes" Click="yes_Click" Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}">+/-</Button>
+            <CheckBox x:Name="danger_re" DockPanel.Dock="Right" VerticalContentAlignment="Center" Checked="danger_Checked" Unchecked="danger_Checked" IsEnabledChanged="danger_d_IsEnabledChanged"
+                     Foreground="Firebrick">опасный</CheckBox>
         </DockPanel>
         <TextBox TextWrapping="Wrap" Grid.Column="1" Grid.Row="8" x:Name="rec"></TextBox>
         <Button Margin="8" x:Name="DomKill" Grid.Row="3" Grid.RowSpan="2" Tag="2" HorizontalAlignment="Center" Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}" FontSize="20" Click="DomKill_Click">💀</Button>

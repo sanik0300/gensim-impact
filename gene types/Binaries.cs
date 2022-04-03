@@ -20,7 +20,7 @@ namespace Симулятор_генетики_4
         /// Кодоминирование
         /// </summary>
         public bool kodom{ get; set; }
-        public Binary(string n, string[] trs, bool scep = false, bool codom=false) : base(n, trs)
+        public Binary(string n, string[] trs, int mp, bool scep = false, bool codom=false) : base(n, trs, mp)
         {
             this.sceplen = scep;
             if(scep)
@@ -40,7 +40,7 @@ namespace Симулятор_генетики_4
         int[] aims;
         public int[] Aims { get { return aims; } set { aims = value; } }
         static public string  commandToENA = "не будет активным";
-        public Activer(string n, string[] trs, int[] ams): base(n, trs)
+        public Activer(string n, string[] trs, int mp, int[] ams): base(n, trs, mp)
         {
             this.aims = ams;
             int saved, j;
@@ -67,7 +67,9 @@ namespace Симулятор_генетики_4
 
             if (string.IsNullOrEmpty(n))
             {
-                StringBuilder sb = new StringBuilder("Активность ", Population.current.genofond.Count * 3 + 11);
+                StringBuilder sb = new StringBuilder("Активность ", Population.current.genofond.Count * 7 / 2 + 11);
+                //*7/2 = 3.5 потому что упоминание гена занимает 3-4 символа: номер, запятую и пробел,
+                // +11 - это длина слова "активность"
                 for (int i = 0; i < aims.Length;)
                 {
                     sb.Append(aims[i].ToString());
@@ -76,9 +78,9 @@ namespace Симулятор_генетики_4
                         break;
                     sb.Append(", ");
                 }
-                this.name = sb.ToString();
+                this.Name = sb.ToString();
             }
-            else { this.name = n; }
+            else { this.Name = n; }
         }
 
         public void deActivate(ref Trait copy_ofthis, IEnumerable<Trait> trs)

@@ -22,6 +22,7 @@ namespace Симулятор_генетики_4
         List<Gene> Genfond = Population.current.genofond;
         Cell only_mutable = Population.current.na_podxode;
         List<Trait> Gentype = Population.current.na_podxode.genotype as List<Trait>;
+        int PrevDrawableIndex;
         public MainWindow()
         {
             InitializeComponent();
@@ -36,23 +37,25 @@ namespace Симулятор_генетики_4
                 main_box.Children.Clear();
 
             main_box = boxes[Convert.ToInt32((sender as RadioButton).Tag)];
+            
+            GenPassingArgs args = e as GenPassingArgs;
             switch (main_box.Tag)
             {
                 case "1":
-                    current_ctr = (e is GenPassingArgs) ? new MultipleAlleled((e as GenPassingArgs).link) : new MultipleAlleled();
+                    current_ctr = args == null? new MultipleAlleled() : new MultipleAlleled(args.link);
                     break;
                 case "2":
-                    current_ctr = (e is GenPassingArgs) ? new ActivatorInput((e as GenPassingArgs).link) : new ActivatorInput();
+                    current_ctr = args == null? new ActivatorInput() : new ActivatorInput(args.link);
                     break;
                 case "3":
-                    current_ctr = (e is GenPassingArgs) ? new ui.RaspredInput((e as GenPassingArgs).link) : new ui.RaspredInput();
+                    current_ctr = args == null? new ui.RaspredInput() : new ui.RaspredInput(args.link);
                     break;
                 default:
-                    current_ctr = (e is GenPassingArgs) ? new BinaryGenSettings((e as GenPassingArgs).link) : new BinaryGenSettings();
+                    current_ctr = args == null? new BinaryGenSettings() : new BinaryGenSettings(args.link);
                     break;
             }
             main_box.Children.Add(current_ctr);
-            if (!(current_ctr is MultipleAlleled)) { main_box.Children.Add(new ui.ProbabilityInput("Приоритет", 0) { Value = 50 }); }
+            if (!(current_ctr is MultipleAlleled)) { main_box.Children.Add(new ui.ProbabilityInput("Приоритет А", 0) { Value = 50 }); }
             mutator = new ui.ProbabilityInput("Вероятность мутации", 0, false);
             main_box.Children.Add(mutator);
             if (current_ctr is ActivatorInput)
@@ -72,7 +75,7 @@ namespace Симулятор_генетики_4
                 return;
             }            
             
-            Gene g = (current_ctr as ui.IReactingUi).CreateNew();
+            Gene g = (current_ctr as ui.IReactingUi).CreateNew(Convert.ToInt32(mutator.Value));
             foreach(Gene gen in Genfond)
                 if(gen.Name == g.Name)
                 {
@@ -80,8 +83,7 @@ namespace Симулятор_генетики_4
                     MessageBox.Show("Такое имя уже есть", null, MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }        
-                
-            g.MutProb = Convert.ToInt32(mutator.Value);
+
             if(g is Binary)
                 (g as Binary).Priority = Convert.ToInt32((main_box.Children[1] as ui.ProbabilityInput).Value);
             if(!(g is Activer))
@@ -98,16 +100,11 @@ namespace Симулятор_генетики_4
 
         private void ebash_to_cell_Click(object sender, RoutedEventArgs e)
         {
-            if (allgens.SelectedIndex == -1) return;
+            if (allgens.SelectedIndex == -1) 
+                return;
 
             Gene g = Genfond[allgens.SelectedIndex];
-            //Future Place уже получено бинарным поиском при попытке выбрать ген
-            if (g is Raspred)
-                Gentype.Insert(Population.FuturePlace, new NumericTrait(g.index, g.Name, new byte?[] { 0, 0 }));
-            else if ((g.lethal!=null && g.lethal.border == 0) || g as Activer != null && (g as Activer).traits[0]==Activer.commandToENA)
-                Gentype.Insert(Population.FuturePlace, new Trait(g.index, g.Name, new byte?[] { 2, 2 }));
-            else
-                Gentype.Insert(Population.FuturePlace, new Trait(g.index, g.Name, new byte?[] { 0, 0 }));
+            Gentype.Insert(Population.FuturePlace, g is Raspred? new NumericTrait(g) : new Trait(g));
             resultgens.Items.Insert(Population.FuturePlace, allgens.SelectedItem);
             Population.current.ChromsNaPodxode += Convert.ToUInt32(g.SxRelated);
 
@@ -136,12 +133,17 @@ namespace Симулятор_генетики_4
             
             if (allgens.SelectedIndex == -1)
                 return;
-
-            if (Population.binarySearch(Genfond[allgens.SelectedIndex], Gentype) != -1)
-                ebash_to_cell.IsEnabled = false;      
             
-            RadioButton senmder;
             Gene sel = Genfond[allgens.SelectedIndex];
+            if (Population.binarySearch(Genfond[allgens.SelectedIndex], Gentype) != -1)
+            {
+                ebash_to_cell.IsEnabled = false;
+                if(Population.current.All_Cells.Count>0)
+                    Population.current.DisplayOneGeneStats(sel, clickables, Population.current.All_Cells);
+                PrevDrawableIndex = allgens.SelectedIndex;
+            }                   
+            
+            RadioButton senmder;       
             if (sel is Activer)
                 senmder = rb2;
             else if (sel is Quaternal)
@@ -165,8 +167,8 @@ namespace Симулятор_генетики_4
             allgens.SelectedIndex = Gentype[resultgens.SelectedIndex].Index;      
             allgens_SelectionChanged(null, null);
 
-            Binary b = Genfond[allgens.SelectedIndex] as Binary;
-            main_box.Children.Add(new ui.GametInput(Gentype[resultgens.SelectedIndex], b!=null&&b.kodom, b==null));
+            Gene g = Genfond[allgens.SelectedIndex];
+            main_box.Children.Add(new ui.GametInput(Gentype[resultgens.SelectedIndex], g is Binary&&(g as Binary).kodom, g is Quaternal));
         }
 
         private void clear_Click(object sender, RoutedEventArgs e)
@@ -232,6 +234,9 @@ namespace Симулятор_генетики_4
             Cell newlymade = Population.current.na_podxode.Clone() as Cell;
             newlymade.MakeButton(Population.current.last_location, ref canvas);
             clickables = canvas.Children.OfType<Button>().ToArray();
+            if (ebash_to_cell.IsEnabled)
+                return;//если эта кнопка уже отключена - значит ген выбрали хороший (в генотипе присутствующий) :)
+            Population.current.DisplayOneGeneStats(Genfond[allgens.SelectedIndex], clickables, new Cell[1] { newlymade });
         }
         private void Change_Sx(object sender, RoutedEventArgs e) { 
             
@@ -248,7 +253,6 @@ namespace Симулятор_генетики_4
 
         static private bool pressed = false;
         Line[] cross = new Line[2] { null, null};
-        SolidColorBrush selection = new SolidColorBrush(Color.FromRgb(0, 0, 0));
         private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             pressed = true;
@@ -256,8 +260,8 @@ namespace Симулятор_генетики_4
             for (byte i=0; i<2; i++) { cross[i] = null; }
 
             Point point = e.GetPosition(sender as Canvas);
-            cross[0] = new Line() { X1 = point.X, X2 = point.X, Y1 = 0, Y2 = canvas.ActualHeight, Stroke=selection};
-            cross[1] = new Line() { X1 = 0, X2 = canvas.ActualWidth, Y1 = point.Y, Y2 = point.Y, Stroke = selection };
+            cross[0] = new Line() { X1 = point.X, X2 = point.X, Y1 = 0, Y2 = canvas.ActualHeight, Stroke=Brushes.Black};
+            cross[1] = new Line() { X1 = 0, X2 = canvas.ActualWidth, Y1 = point.Y, Y2 = point.Y, Stroke = Brushes.Black };
             foreach(Line el in cross) { canvas.Children.Add(el); }
             Population.current.last_location = new Point(point.X, point.Y);
         }
@@ -304,15 +308,15 @@ namespace Симулятор_генетики_4
                     c.MakeButton(Population.current.last_location, ref canvas);
                     c.DrawRelation(ref canvas);
                     clickables = canvas.Children.OfType<Button>().ToArray();
+                    Population.current.DisplayOneGeneStats(Genfond[PrevDrawableIndex], clickables, new Cell[1] { c });
                 }
-
             }           
             Population.current.SelectedCells.Clear();
         }
 
         private void save_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog sfd = new SaveFileDialog() { DefaultExt = ".pop" };
+            SaveFileDialog sfd = new SaveFileDialog() { DefaultExt = ".pop", Filter = Population.FilesTypesFilter };
             sfd.FileOk += Sfd_FileOk;
             sfd.ShowDialog();         
         }
@@ -323,17 +327,18 @@ namespace Симулятор_генетики_4
         }
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (Population.current.SmthUnSaved)
-            {
-                MessageBoxResult whattodo = MessageBox.Show("Есть несохраннённые изменения, сохранить сначала их?", "", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes);
-                if (whattodo == MessageBoxResult.Yes)
-                    save_Click(sender, null);             
-            }
+            if (!Population.current.SmthUnSaved)
+                return;
+
+            MessageBoxResult whattodo = MessageBox.Show("Есть несохраннённые изменения, сохранить сначала их?", "", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes);
+            if (whattodo == MessageBoxResult.Yes)
+                save_Click(sender, null);
+
         }
         private void open_Click(object sender, RoutedEventArgs e)
         {
             Window_Closing(sender, new CancelEventArgs());
-            OpenFileDialog ofd = new OpenFileDialog() { Filter = "Популяции (*.pop)|*.pop|Просто JSON|*.json|Текстовые файлы|*.txt|Все файлы ¯\\_(ツ)_/¯|*.*" };
+            OpenFileDialog ofd = new OpenFileDialog() { Filter = Population.FilesTypesFilter };
             ofd.FileOk += Ofd_FileOk;
             ofd.ShowDialog();
         }
@@ -369,6 +374,9 @@ namespace Симулятор_генетики_4
                 c.DrawRelation(ref canvas);
             }
             clickables = canvas.Children.OfType<Button>().ToArray();
+            PrevDrawableIndex = allgens.SelectedIndex = Genfond.Count - 1;
+            Population.current.DisplayOneGeneStats(Genfond[PrevDrawableIndex], clickables, Population.current.All_Cells);
+
             ebash_all.IsEnabled = ebash_to_cell.IsEnabled = naxer_gen.IsEnabled = Genfond.Count > 0;
             navixod.IsEnabled = clear.IsEnabled = addlife.IsEnabled = Gentype.Count > 0;
             spc.Close();
@@ -383,7 +391,7 @@ namespace Симулятор_генетики_4
             if (!pressed) return;
             if (region == null)
             {
-                region = new Rectangle() { Margin = new Thickness(Population.current.last_location.X, Population.current.last_location.Y, 0, 0), Stroke = selection };
+                region = new Rectangle() { Margin = new Thickness(Population.current.last_location.X, Population.current.last_location.Y, 0, 0), Stroke = Brushes.Black };
                 canvas.Children.Add(region);
             }               
             current = e.GetPosition(sender as Canvas);
@@ -395,7 +403,7 @@ namespace Симулятор_генетики_4
             if (deltaX < 0)
                 region.Margin = new Thickness(Population.current.last_location.X + deltaX, region.Margin.Top, 0, 0);
             if(deltaY <0)
-                region.Margin = new Thickness(region.Margin.Left, Population.current.last_location.Y + deltaY, 0, 0);                     
-        }     
+                region.Margin = new Thickness(region.Margin.Left, Population.current.last_location.Y + deltaY, 0, 0);               
+        }   
     }
 }

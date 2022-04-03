@@ -41,7 +41,7 @@ namespace Симулятор_генетики_4.ui
         public double Value { get { return le_Choose.Value; } set { le_Choose.Value = value; } }
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            probability.Text = $"{stdTxt}: {Math.Round(le_Choose.Value)}/{Math.Round(100 - le_Choose.Value)}";
+            probability.Text = $"{stdTxt}: {Math.Round(le_Choose.Value)} %";
         }
     }
 }

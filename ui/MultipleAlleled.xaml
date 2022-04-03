@@ -49,6 +49,13 @@
             <TextBox  TextWrapping="Wrap" x:Name="AB"></TextBox>
         </DockPanel>
     </Grid>
+        <TextBlock Foreground="Firebrick">Опасные:</TextBlock>
+        <StackPanel Orientation="Horizontal">
+            <CheckBox x:Name="Alrt0" Checked="Alrt_Checked" Tag="0" Unchecked="Alrt_Unchecked" IsEnabledChanged="Alrt_IsEnabledChanged">0</CheckBox>
+            <CheckBox x:Name="AlrtA" Checked="Alrt_Checked" Tag="1" Unchecked="Alrt_Unchecked" IsEnabledChanged="Alrt_IsEnabledChanged">A</CheckBox>
+            <CheckBox x:Name="AlrtB" Checked="Alrt_Checked" Tag="2" Unchecked="Alrt_Unchecked" IsEnabledChanged="Alrt_IsEnabledChanged">B</CheckBox>
+        </StackPanel>
+        
     </DockPanel>
     
     

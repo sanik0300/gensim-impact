@@ -47,7 +47,7 @@ namespace Симулятор_генетики_4.ui
             units.Text = er.measure;
             precision.Value = er.prec;
             polyline.Points.Clear();        
-            isdeadly.IsChecked = g.lethal!= null;
+            isdeadly.IsChecked = g.lethal != null;
             if (g.lethal != null)
             {               
                 lethalmax_ValueChanged(null, new RoutedPropertyChangedEventArgs<double>(lethalmax.Value, er.lethal.border / er.delta));
@@ -114,9 +114,9 @@ namespace Симулятор_генетики_4.ui
             nameinput.Text = min_num.Text = max_num.Text = units.Text = null;
         }
 
-        public Gene CreateNew()
+        public Gene CreateNew(int mutprob)
         {         
-            Raspred rer = new Raspred(nameinput.Text, this.probabilities, Convert.ToSingle(min_num.Text), Convert.ToSingle(max_num.Text), 
+            Raspred rer = new Raspred(nameinput.Text, this.probabilities, mutprob, Convert.ToSingle(min_num.Text), Convert.ToSingle(max_num.Text), 
                                 (float)dispersion.Value, (int)priorities.Value, this.revers, units.Text, (int)precision.Value);
             if ((bool)isdeadly.IsChecked)
             {

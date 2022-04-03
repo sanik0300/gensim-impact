@@ -32,10 +32,22 @@ namespace Симулятор_генетики_4.ui
         byte increase;
         int backup;
         int danger;
+        private void UncommonMiddleClick(object sender, RoutedEventArgs e)
+        { //не даёт нам забить 0А или АА, когда А летальный
+            Button other = sender == A1 ? A2 : A1;
+            other.IsEnabled = a1.IsEnabled = a2.IsEnabled = false;
+        }
+
+        private void UncommonThebiggestClick(object sender, RoutedEventArgs re)
+        {
+            a1.IsEnabled = a2.IsEnabled = A1.IsEnabled = A2.IsEnabled = true;
+        }
+
         private void CommonClick(Button but, Button[] pair)
         {
             foreach (Button b in pair)
                 b.Background = @default;
+
             but.Background = selection;           
             link.CalculateResultingFentype(but, null);
             Activer aaa = Population.current.genofond[link.Index] as Activer;
@@ -85,25 +97,38 @@ namespace Симулятор_генетики_4.ui
             letter1 = new Button[3] { a1, A1, B1 };
             letter2 = new Button[3] { a2, A2, B2 };
             link = t;
-            increase =(kodom || quad)? Convert.ToByte(1) : Convert.ToByte(2);
-            if (Population.current.genofond[link.Index].SxRelated)
+            increase =(kodom || quad)? (byte)1 : (byte)2;
+            Gene short_ref = Population.current.genofond[link.Index];
+            if (short_ref.SxRelated)
             {
                 foreach (Button b in letter2)
                     b.IsEnabled = Population.current.na_podxode.homogametous;
             }
-            if (Population.current.genofond[link.Index].lethal != null && !(Population.current.genofond[link.Index] is Raspred))
+            if (short_ref.lethal != null && !(short_ref is Raspred))
             {
-                danger = (int)Population.current.genofond[link.Index].lethal.border;
-                
-                if(danger > 0)
+                danger = (int)short_ref.lethal.border;
+
+                if (quad)
                 {
-                    A1.IsEnabled = false;
-                    A2.IsEnabled = false;
+                    switch (danger)
+                    {
+                        case 2:
+                            B1.IsEnabled = B2.IsEnabled = danger < 2;
+                            break;
+                        case 1:
+                            A1.Click += UncommonMiddleClick;
+                            A2.Click += UncommonMiddleClick;
+                            B1.Click += UncommonThebiggestClick;
+                            B2.Click += UncommonThebiggestClick;
+                            break;
+                    }
                 }
                 else
                 {
-                    a1.IsEnabled = false;
+                    A1.IsEnabled = A2.IsEnabled = danger <= 0;
                 }
+                
+                a1.IsEnabled = danger > 0;
             }
             a1.Content = a2.Content = quad? '0' : 'a';
             letter1[Convert.ToInt32(quad? (int)t.allels[0] : Convert.ToInt32(t.allels[0]>0))].Background = selection;

@@ -11,43 +11,62 @@ namespace Симулятор_генетики_4
     }
     [JsonConverter(typeof(DifferentGenesConverter))]
     public abstract class Gene
-    {
-        protected string name;
-        public string Name { get { return name; }  set { name = value; } }
+    {   
+        /// <summary>
+        /// название гена
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// набор проявлений
+        /// </summary>
         public string[] traits { get; set; }
         /// <summary>
         /// вероятность мутации
         /// </summary>
-        protected int mutation_prob;
-        public int MutProb { get { return mutation_prob; } set { mutation_prob = value; } }
+        public int MutProb { get; set ; }
         /// <summary>
         /// для сортировки по времени добавления
         /// </summary>
         public int index { get; set; }
+        
         private string optname;
+        /// <summary>
+        /// проявление на случай неактивности
+        /// </summary>
         public string OptName { 
             get { return optname;} 
             set { optname = value == string.Empty ? null : value; } 
         }
-
+        /// <summary>
+        /// возможность убить всю особь
+        /// </summary>
         public LethalComponent lethal { get; set; }
-        public Gene() {}
-
         
+        /// <summary>
+        /// связан ли с полом
+        /// </summary>
         [JsonIgnore] public bool SxRelated
         {
             get { return this as Binary != null && (this as Binary).sceplen; }
         }
-        protected Gene(string n, string[] trs)
+        /// <summary>
+        /// 1 или 2 опасных аллеля, помечаемые красным
+        /// </summary>
+        public int[]? AlertAllels { get; set; }
+
+        public Gene() { }
+        protected Gene(string n, string[] trs, int mp)
         {
-            name = n;
+            Name = n;
             traits = trs;
+            MutProb = mp;
+            AlertAllels = null;
             index = Population.current.genofond.Count;
             Population.current.taken_aims.Add(false);
         }
         public override string ToString()
         {
-            return SxRelated? this.name+" XY" : this.name;
+            return SxRelated? this.Name+" XY" : this.Name;
         }
         public virtual void PreRemoveNaxer() { }
     } 

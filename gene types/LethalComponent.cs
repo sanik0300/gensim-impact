@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Windows.Media;
 
 namespace Симулятор_генетики_4
 {
-    public class LethalComponent
-    {
+    public class LethalComponent 
+    {     
         public float border { get; set; }
         public int probability { get; set; }
-         
+
         public bool ReallyKills(Trait tr)
         {
             if(Population.current.genofond[tr.Index] is Raspred)
@@ -14,16 +15,12 @@ namespace Симулятор_генетики_4
                 NumericTrait nt = tr as NumericTrait;
                 return nt.val - (Population.current.genofond[nt.Index] as Raspred).min <= border || nt.val >= (Population.current.genofond[tr.Index] as Raspred).max - border;
             }
-            else if(Population.current.genofond[tr.Index] is Binary)
-            {
-                return (tr.allels[1]==null? tr.allels[0] : tr.allels[0] + tr.allels[1]) > 0 == this.border > 0;
-            }
             else
-            {
-                if (tr.allels[0] == tr.allels[1])
-                    return tr.allels[0] == this.border;
-                else
-                    return (tr.allels[1] == null ? tr.allels[0] : tr.allels[0] + tr.allels[1]) >= this.border;
+            {   
+                //на случай варианта АВ
+                if (Population.current.genofond[tr.Index] is Quaternal && tr.allels[0] + tr.allels[1] == 3)
+                    return this.border == 1 || this.border == 2;
+                return tr.DefiningAllel() == this.border;
             }
         }
 

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Симулятор_генетики_4"
         mc:Ignorable="d"
-        Title="SvodkaOfGens" Height="250" Width="400" Closed="Window_Closed" IsManipulationEnabled="False" Icon="/ui/biology128.ico">
+        Title="SvodkaOfGens" Height="250" Width="400" Closed="Window_Closed" IsManipulationEnabled="False" Icon="/ui/cell_biology_512.ico">
     <Window.Resources>
         <local:Mutations_converter x:Key="mut_to_color"></local:Mutations_converter>
         <Style TargetType="DataGridCell" x:Key="mutatiomm">

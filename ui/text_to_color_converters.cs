@@ -54,7 +54,7 @@ namespace Симулятор_генетики_4
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            LethalComponent lel = Population.current.genofond[(value as Trait).Index].lethal;
+            LethalComponent lel = Population.current.genofond[(value as Trait).Index].lethal as LethalComponent;
             if (lel != null && lel.ReallyKills(value as Trait))
                 return Brushes.White;
             else

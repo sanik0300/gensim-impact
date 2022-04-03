@@ -38,12 +38,13 @@ namespace Симулятор_генетики_4
         /// <param name="probs">массив с вероятностями</param>
         /// <param name="mi">минимум</param>
         /// <param name="ma">максимум (чисто для вычисления дельты)</param>
+        /// <param name="mp">вероятноть мутации</param>
         /// <param name="s">дисперсия</param>
         /// <param name="bdr">граница распределения аллелей</param>
         /// <param name="rev">задом наперёд аллели или нє</param>
         /// <param name="sel">единица измерения</param>
         /// <param name="prc">знаки после запятой</param>
-        public Raspred(string n, double[] probs, float mi, float ma, float s, int bdr, bool rev, string sel, int prc, string[] trs=null) : base(n, trs) {
+        public Raspred(string n, double[] probs, int mp, float mi, float ma, float s, int bdr, bool rev, string sel, int prc, string[] trs=null) : base(n, trs, mp) {
             this.reversed = rev;
             this.min = mi;
             this.max = ma;

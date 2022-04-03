@@ -8,7 +8,7 @@ namespace Симулятор_генетики_4.ui
     interface IReactingUi
     {
         public TextBox[] textboxes { get; }
-        public Gene CreateNew();
+        public Gene CreateNew(int mutprob);
 
         public void CheckFilling();
 

@@ -7,6 +7,8 @@ using System.Text.Json.Serialization;
 
 namespace Симулятор_генетики_4
 {
+    //Да знаю я про newtonsoft.json, просто захотелось самостоятельно serializer написать
+    //No hate, I know about newtonsoft.json, but this time I wanted to write a serializer myself
     public class DifferentGenesConverter : JsonConverter<Gene>
     {
         public override bool CanConvert(Type typeToConvert)

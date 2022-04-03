@@ -63,7 +63,7 @@ namespace Симулятор_генетики_4
             opt_name.Text = null;
         }
 
-        public Gene CreateNew()
+        public Gene CreateNew(int mutprob)
         {
             int[] futAims = new int[Aims.SelectedItems.Count];
             for(int i =0; i<Aims.SelectedItems.Count; i++)
@@ -72,7 +72,7 @@ namespace Симулятор_генетики_4
             }
             return new Activer(opt_name.Text, gotta_reverse? 
                 new string[] { "будет активным", null, Activer.commandToENA, } :  new string[] { Activer.commandToENA, null, "будет активным"},
-                futAims);
+                mutprob, futAims);
         }
 
         private void rev_Click(object sender, RoutedEventArgs e)
